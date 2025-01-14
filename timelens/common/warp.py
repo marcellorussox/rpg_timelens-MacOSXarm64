@@ -13,8 +13,7 @@ def compute_source_coordinates(y_displacement, x_displacement):
                                         [example_index, 1, y, x]
     """
     width, height = y_displacement.size(-1), y_displacement.size(-2)
-    x_target, y_target = pytorch_tools.create_meshgrid(width, height,
-                                                       y_displacement.is_cuda)
+    x_target, y_target = pytorch_tools.create_meshgrid(width, height)
     x_source = x_target + x_displacement.squeeze(1)
     y_source = y_target + y_displacement.squeeze(1)
     out_of_boundary_mask = ((x_source.detach() < 0) | (x_source.detach() >= width) |

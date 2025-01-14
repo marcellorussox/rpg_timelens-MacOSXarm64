@@ -18,7 +18,7 @@ class Fusion(nn.Module):
         return self.fusion_network(_pack(example))
         
     def from_legacy_checkpoint(self, checkpoint_filename):
-        checkpoint = th.load(checkpoint_filename)
+        checkpoint = th.load(checkpoint_filename, map_location=th.device('cpu'))
         self.load_state_dict(checkpoint["networks"])
 
     def run_and_pack_to_example(self, example):

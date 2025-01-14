@@ -4,20 +4,7 @@ from scipy.ndimage import morphology
 import torch as th
 from torchvision import transforms
 
-def set_fastest_cuda_mode():
-    th.backends.cudnn.fastest = True
-    th.backends.cudnn.benchmark = True
 
-def move_tensors_to_cuda(dictionary_of_tensors):
-    if isinstance(dictionary_of_tensors, dict):
-        return {
-            key: move_tensors_to_cuda(value)
-            for key, value in dictionary_of_tensors.items()
-        }
-    if isinstance(dictionary_of_tensors, th.Tensor):
-        return dictionary_of_tensors.cuda(non_blocking=True)
-    return dictionary_of_tensors
-    
 def find_channels_mean_and_std(image):
     mean_list = []
     std_list = []
@@ -71,12 +58,9 @@ def unsqueeze_back_n(tensor, n):
     return tensor[(...,) + (None,) * n]
 
 
-def create_meshgrid(width, height, is_cuda):
+def create_meshgrid(width, height):
     x, y = th.meshgrid([th.arange(0, width), th.arange(0, height)])
     x, y = (x.transpose(0, 1).float(), y.transpose(0, 1).float())
-    if is_cuda:
-        x = x.cuda()
-        y = y.cuda()
     return x, y
 
 
@@ -94,6 +78,4 @@ def dilate(image, window_size):
             np.uint8
         )
     )
-    if image.is_cuda:
-        return dilated_image.cuda()
     return dilated_image

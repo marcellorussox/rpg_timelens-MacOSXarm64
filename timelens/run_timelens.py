@@ -28,7 +28,6 @@ def _interpolate(
         output_folder
 ):
     output_frames, output_timestamps = [], []
-    pytorch_tools.set_fastest_cuda_mode()
     combined_iterator = zip(boundary_frames_iterator, interframe_events_iterator)
     counter = 0
     for (left_frame, right_frame), event_sequence in combined_iterator:
@@ -58,7 +57,6 @@ def _interpolate(
             )
             example = transformers.apply_transforms(example, transform_list)
             example = transformers.collate([example])
-            example = pytorch_tools.move_tensors_to_cuda(example)
 
             with torch.no_grad():
                 frame, _ = network.run_fast(example)
@@ -80,7 +78,8 @@ def _interpolate(
 def _load_network(checkpoint_file):
     network = attention_average_network.AttentionAverage()
     network.from_legacy_checkpoint(checkpoint_file)
-    network.cuda()
+    device = torch.device("cpu")
+    network.to(device)
     network.eval()
     return network
 

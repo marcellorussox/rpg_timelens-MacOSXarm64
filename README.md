@@ -35,15 +35,56 @@ Questa versione è ottimizzata per macOS ARM (Apple Silicon) e utilizza Miniforg
 
 ### 1. Installazione di Miniforge
 
-Scaricare e installare Miniforge per macOS ARM dal [sito ufficiale](https://github.com/conda-forge/miniforge/releases). Usare il file:
+Per installare Miniforge in modo semplice e gestibile, si consiglia di utilizzare **Homebrew**. Eseguire il seguente comando per installare Miniforge:
 
-- `Miniforge3-MacOSX-arm64.sh`
+    brew install --cask miniforge
 
-Eseguire il comando per avviare l'installazione:
+#### **Configurare Miniforge per la shell Zsh**
+Dopo l'installazione, è necessario configurare Miniforge per funzionare correttamente con la shell Zsh. Esegui il seguente comando per inizializzare Conda:
+    
+    conda init zsh
 
-    bash Miniforge3-MacOSX-arm64.sh
+Se il comando sopra non risolve il problema, aggiungi manualmente il seguente blocco di configurazione al tuo file `.zshrc`:
 
-Seguire le istruzioni per completare l'installazione.
+    nano ~/.zshrc
+
+Copia e incolla il seguente codice nel file `.zshrc`:
+
+    export PATH="/opt/homebrew/Caskroom/miniforge/base/bin:$PATH"
+
+Salva il file (`CTRL+O`, poi `Invio`) ed esci (`CTRL+X`). Successivamente, ricarica il file `.zshrc` con:
+
+    source ~/.zshrc
+
+Se si riscontrano problemi cancella `export PATH="/opt/homebrew/Caskroom/miniforge/base/bin:$PATH"` e incolla questo:
+
+    # >>> conda initialize >>>
+    # !! Contents within this block are managed by 'conda init' !!
+    __conda_setup="$('/opt/homebrew/Caskroom/miniforge/base/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+    if [ $? -eq 0 ]; then
+        eval "$__conda_setup"
+    else
+        if [ -f "/opt/homebrew/Caskroom/miniforge/base/etc/profile.d/conda.sh" ]; then
+            . "/opt/homebrew/Caskroom/miniforge/base/etc/profile.d/conda.sh"
+        else
+            export PATH="/opt/homebrew/Caskroom/miniforge/base/bin:$PATH"
+        fi
+    fi
+    unset __conda_setup
+    # <<< conda initialize <<<
+
+Salva nuovamente il file e ricarica tramite:
+
+    source ~/.zshrc
+
+#### **Verifica dell'installazione**
+Assicurati che Miniforge sia stato configurato correttamente eseguendo:
+    
+    conda --version
+
+Se tutto è configurato correttamente, dovresti vedere una versione di Conda, ad esempio:
+    
+    conda 23.x.x
 
 ### 2. Creazione dell'ambiente Conda
 
@@ -52,7 +93,7 @@ Creare un ambiente Conda e installare le dipendenze richieste:
     conda create -y -n timelens python=3.9
     conda activate timelens
     pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
-    conda install -y -c conda-forge opencv scipy tqdm click jupyter
+    conda install -y -c conda-forge opencv scipy tqdm click
     brew install ffmpeg
 
 ### 3. Clonare il repository

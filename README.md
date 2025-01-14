@@ -53,7 +53,7 @@ Creare un ambiente Conda e installare le dipendenze richieste:
     conda activate timelens
     pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
     conda install -y -c conda-forge opencv scipy tqdm click jupyter
-    brew install ffmpeg  # Per la creazione del video finale
+    brew install ffmpeg
 
 ### 3. Clonare il repository
 
@@ -61,8 +61,8 @@ Clonare il codice del progetto:
 
     mkdir ~/timelens/
     cd ~/timelens
-    git clone https://github.com/marcellorussox/rpg_timelens-MacOSXarm64.git
-    cd rpg_timelens-MacOSXarm64
+    git clone https://github.com/marcellorussox/rpg_timelens-MacOSXarm64.git rpg_timelens
+    cd rpg_timelens
 
 ### 4. Scaricare i dati di esempio e il modello pre-addestrato
 
@@ -144,8 +144,6 @@ Le immagini sono contenute nella directory `images_corrected`. I timestamp corri
    - Configurazione ottimizzata per macOS ARM (Apple Silicon) utilizzando Miniforge.
 3. **Installazione semplificata**:
    - Procedura aggiornata per includere Miniforge e dipendenze specifiche per macOS.
-4. **Inclusione di Jupyter**:
-   - Installato Jupyter per una possibile integrazione con notebook e analisi interattive.
 
 ---
 

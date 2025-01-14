@@ -1,4 +1,4 @@
-# TimeLens: Event-based Video Frame Interpolation - MacOS ARM (CPU-only)
+# TimeLens: Event-based Video Frame Interpolation
 
 <p align="center">
   <a href="https://youtu.be/dVLyia-ezvo">
@@ -6,147 +6,118 @@
   </a>
 </p>
 
-Questo repository è una versione adattata per **macOS ARM (Apple Silicon)** del progetto **TimeLens**, descritto nel paper [**TimeLens: Event-based Video Frame Interpolation**](http://rpg.ifi.uzh.ch/docs/CVPR21_Gehrig.pdf), presentato al CVPR 2021 da Stepan Tulyakov*, [Daniel Gehrig*](https://danielgehrig18.github.io/), Stamatios Georgoulis, Julius Erbach, [Mathias Gehrig](https://magehrig.github.io/), Yuanyou Li, e [Davide Scaramuzza](http://rpg.ifi.uzh.ch/people_scaramuzza.html).
+This repository is about the High Speed Event and RGB (HS-ERGB) dataset, used in the 2021 CVPR paper [**TimeLens: Event-based Video Frame Interpolation**](http://rpg.ifi.uzh.ch/docs/CVPR21_Gehrig.pdf) by Stepan Tulyakov*, [Daniel Gehrig*](https://danielgehrig18.github.io/), Stamatios Georgoulis, Julius Erbach, [Mathias Gehrig](https://magehrig.github.io/), Yuanyou Li, and [Davide Scaramuzza](http://rpg.ifi.uzh.ch/people_scaramuzza.html).
 
-Per maggiori informazioni, visita la [pagina del progetto](http://rpg.ifi.uzh.ch/timelens).
+For more information, visit our [project page](http://rpg.ifi.uzh.ch/timelens).
 
----
 
+### Citation
+A pdf of the paper is [available here](http://rpg.ifi.uzh.ch/docs/CVPR21_Gehrig.pdf). If you use this dataset, please cite this publication as follows:
+
+```bibtex
+@Article{Tulyakov21CVPR,
+  author        = {Stepan Tulyakov and Daniel Gehrig and Stamatios Georgoulis and Julius Erbach and Mathias Gehrig and Yuanyou Li and
+                  Davide Scaramuzza},
+  title         = {{TimeLens}: Event-based Video Frame Interpolation},
+  journal       = "IEEE Conference on Computer Vision and Pattern Recognition",
+  year          = 2021,
+}
+```
 ## Google Colab
-
-Un notebook Google Colab è disponibile [qui](TimeLens.ipynb). È possibile aumentare la frequenza dei frame dei propri video utilizzando i dati salvati su Google Drive.
-
----
+A Google Colab notebook is now available [here](TimeLens.ipynb). You can upsample your own video and events from you gdrive. 
 
 ## Gallery
-
-Per ulteriori esempi, visita la [pagina del progetto](http://rpg.ifi.uzh.ch/timelens).
+For more examples, visit our [project page](http://rpg.ifi.uzh.ch/timelens).
 
 ![coke](assets/coke.gif)
 ![paprika](assets/paprika.gif)
 ![pouring](assets/pouring.gif)
 ![water_bomb_floor](assets/water_bomb_floor.gif)
 
----
+## Installation
+Install the dependencies with 
 
-## Installazione
-
-Questa versione è ottimizzata per macOS ARM (Apple Silicon) e utilizza Miniforge per la configurazione dell'ambiente Conda. CUDA non è richiesto, e l'esecuzione è basata esclusivamente sulla CPU.
-
-### 1. Installazione di Miniforge
-
-Scaricare e installare Miniforge per macOS ARM dal [sito ufficiale](https://github.com/conda-forge/miniforge/releases). Usare il file:
-
-- `Miniforge3-MacOSX-arm64.sh`
-
-Eseguire il comando per avviare l'installazione:
-
-    bash Miniforge3-MacOSX-arm64.sh
-
-Seguire le istruzioni per completare l'installazione.
-
-### 2. Creazione dell'ambiente Conda
-
-Creare un ambiente Conda e installare le dipendenze richieste:
-
-    conda create -y -n timelens python=3.9
+    cuda_version=10.2
+    conda create -y -n timelens python=3.7
     conda activate timelens
-    pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
-    conda install -y -c conda-forge opencv scipy tqdm click jupyter
-    brew install ffmpeg  # Per la creazione del video finale
+    conda install -y pytorch torchvision cudatoolkit=$cuda_version -c pytorch
+    conda install -y -c conda-forge opencv scipy tqdm click
 
-### 3. Clonare il repository
-
-Clonare il codice del progetto:
+## Test TimeLens
+First start by cloning this repo into a new folder
 
     mkdir ~/timelens/
     cd ~/timelens
-    git clone https://github.com/marcellorussox/rpg_timelens-MacOSXarm64.git
-    cd rpg_timelens-MacOSXarm64
+    git clone https://github.com/uzh-rpg/rpg_timelens
 
-### 4. Scaricare i dati di esempio e il modello pre-addestrato
+Then download the checkpoint and data to the repo
 
-Scaricare i dati di esempio e il checkpoint per l’interpolazione:
-
+    cd rpg_timelens
     wget http://download.ifi.uzh.ch/rpg/web/data/timelens/data2/checkpoint.bin
     wget http://download.ifi.uzh.ch/rpg/web/data/timelens/data2/example_github.zip
-    unzip example_github.zip
+    unzip example_github.zip 
     rm -rf example_github.zip
 
----
-
-### Esecuzione
-
-Per eseguire TimeLens con i dati forniti:
+### Running Timelens
+To run timelens simply call 
 
     skip=0
     insert=7
     python -m timelens.run_timelens checkpoint.bin example/events example/images example/output $skip $insert
 
-- **`checkpoint.bin`**: Il modello pre-addestrato.
-- **`example/events`** e **`example/images`**: I dati di input (eventi e immagini).
-- **`example/output`**: La directory in cui verranno salvati i frame interpolati.
-- **`skip`** e **`insert`**: Parametri che determinano quanti frame saltare e quanti interpolare. Ad esempio:
-  - `insert=7` inserisce 7 frame intermedi per ogni coppia di frame.
+This will generate the output in `example/output`. 
+The first four variables are the checkpoint file, image folder and event folder and output folder respectively.
+The variables `skip` and `insert` determine the number of skipped vs. inserted frames, i.e. to generate a 
+video with an 8 higher framerate, 7 frames need to be inserted, and 0 skipped.
 
----
-
-### Creazione del video
-
-Dopo aver generato i frame interpolati, è possibile combinare le immagini in un video:
+The resulting images can be converted to a video with 
 
     ffmpeg -i example/output/%06d.png timelens.mp4
 
-Il video risultante sarà salvato come `timelens.mp4`.
-
----
+the resulting video is `timelens.mp4`.
 
 ## Dataset
+![hsergb](assets/hsergb_preview.gif)
 
-Per test più avanzati, è possibile scaricare il dataset completo dalla [pagina ufficiale del progetto](http://rpg.ifi.uzh.ch/timelens). La struttura del dataset è la seguente:
+Download the dataset from our [project page](http://rpg.ifi.uzh.ch/timelens). The dataset structure is as follows
 
-    .
-    ├── close
-    │   └── test
-    │       ├── baloon_popping
-    │       │   ├── events_aligned
-    │       │   └── images_corrected
-    │       ├── candle
-    │       │   ├── events_aligned
-    │       │   └── images_corrected
-    │       ...
-    │
-    └── far
-        └── test
-            ├── bridge_lake_01
-            │   ├── events_aligned
-            │   └── images_corrected
-            ├── bridge_lake_03
-            │   ├── events_aligned
-            │   └── images_corrected
-            ...
+```
+.
+├── close
+│   └── test
+│       ├── baloon_popping
+│       │   ├── events_aligned
+│       │   └── images_corrected
+│       ├── candle
+│       │   ├── events_aligned
+│       │   └── images_corrected
+│       ...
+│
+└── far
+    └── test
+        ├── bridge_lake_01
+        │   ├── events_aligned
+        │   └── images_corrected
+        ├── bridge_lake_03
+        │   ├── events_aligned
+        │   └── images_corrected
+        ...
 
-Ogni cartella `events_aligned` contiene file `.npz` che rappresentano gli eventi tra due immagini consecutive. Ogni file `.npz` include:
+```
+Each `events_aligned` folder contains events files with template filename `%06d.npz`, and `images_corrected` contains image files with template filename `%06d.png`. In `events_aligned` each event file with index `n` contains events between images with index `n-1` and `n`, i.e. event file `000001.npz` contains events between images `000000.png` and `000001.png`. Each event file contains keys for the x,y,t, and p event component. Note that x and y need to be divided by 32 before use. This is because they actually correspond to remapped events, which have floating point coordinates.
 
-- **`x` e `y`**: Coordinate spaziali dei pixel in cui si sono verificati eventi.
-- **`t`**: Timestamps degli eventi.
-- **`p`**: Polarità degli eventi (cambiamenti di luminosità positivi o negativi).
+Moreover, `images_corrected` also contains `timestamp.txt` where image timestamps are stored. Note that in some folders there are more image files than event files. However, the image stamps in `timestamp.txt` should match with the event files and the additional images can be ignored.
 
-Le immagini sono contenute nella directory `images_corrected`. I timestamp corrispondenti sono elencati in `timestamp.txt`.
+For a quick test download the dataset to a folder using the link sent by email.
 
----
+    wget download_link.zip -O /tmp/dataset.zip
+    unzip /tmp/dataset.zip -d hsergb/
 
-## Modifiche rispetto al progetto originale
+And run the test
 
-1. **Rimosso il supporto CUDA**:
-   - Il codice è stato modificato per funzionare esclusivamente su CPU, eliminando i riferimenti a CUDA.
-2. **Compatibilità con macOS ARM**:
-   - Configurazione ottimizzata per macOS ARM (Apple Silicon) utilizzando Miniforge.
-3. **Installazione semplificata**:
-   - Procedura aggiornata per includere Miniforge e dipendenze specifiche per macOS.
-4. **Inclusione di Jupyter**:
-   - Installato Jupyter per una possibile integrazione con notebook e analisi interattive.
-
----
-
-Se si riscontrano problemi o bug, è possibile aprire un'issue nel repository o contattare i maintainer.
+    python test_loader.py --dataset_root hsergb/ \ 
+                          --dataset_type close \ 
+                          --sequence spinning_umbrella \ 
+                          --sample_index 400
+                                              
+This should open a window visualizing aligned events with a single image.

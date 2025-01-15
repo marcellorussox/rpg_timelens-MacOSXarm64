@@ -6,6 +6,7 @@ from torch import nn
 def closest_larger_multiple_of_minimum_size(size, minimum_size):
     return int(math.ceil(size / minimum_size) * minimum_size)
 
+
 class SizeAdapter(object):
     """Converts size of input to standard size.
     Practical deep network works only with input images

@@ -3,6 +3,7 @@ import torch.nn.functional as F
 from timelens import refine_warp_network, warp_network
 from timelens.superslomo import unet
 
+
 def _pack_input_for_attention_computation(example):
     fusion = example["middle"]["fusion"]
     number_of_examples, _, height, width = fusion.size()
@@ -24,9 +25,9 @@ def _pack_input_for_attention_computation(example):
 
 def _compute_weighted_average(attention, before_refined, after_refined, fusion):
     return (
-        attention[:, 0, ...].unsqueeze(1) * before_refined
-        + attention[:, 1, ...].unsqueeze(1) * after_refined
-        + attention[:, 2, ...].unsqueeze(1) * fusion
+            attention[:, 0, ...].unsqueeze(1) * before_refined
+            + attention[:, 1, ...].unsqueeze(1) * after_refined
+            + attention[:, 2, ...].unsqueeze(1) * fusion
     )
 
 
@@ -39,7 +40,7 @@ class AttentionAverage(refine_warp_network.RefineWarp):
 
     def run_fast(self, example):
         example['middle']['before_refined_warped'], \
-        example['middle']['after_refined_warped'] = refine_warp_network.RefineWarp.run_fast(self, example)
+            example['middle']['after_refined_warped'] = refine_warp_network.RefineWarp.run_fast(self, example)
 
         attention_scores = self.attention_network(
             _pack_input_for_attention_computation(example)

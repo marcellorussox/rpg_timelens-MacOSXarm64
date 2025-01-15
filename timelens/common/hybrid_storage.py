@@ -1,5 +1,6 @@
 from timelens.common import event, image_sequence, iterator_modifiers
 
+
 class HybridStorage(object):
     """Template class that stores events and images."""
 

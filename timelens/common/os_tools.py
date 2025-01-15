@@ -1,11 +1,10 @@
 import glob
 import os
-import re
 
-import numpy as np
 
 def make_glob_filename_iterator(file_template):
     return sorted(glob.glob(file_template))
+
 
 def find_leaf_folders(root_folder):
     """Returns list of leaf folders. 

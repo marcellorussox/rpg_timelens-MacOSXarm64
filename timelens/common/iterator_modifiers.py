@@ -9,6 +9,7 @@ def make_skip_iterator(iterator, number_of_skips):
         for _ in range(number_of_skips):
             next(iterator, None)
 
+
 def make_iterator_over_groups(iterator, group_size):
     """Returns iterator, that returns groups of values from the original iterator.
     
@@ -20,7 +21,8 @@ def make_iterator_over_groups(iterator, group_size):
         group.append(item)
         if len(group) == group_size:
             yield tuple(group)
-            group = group[1:] 
+            group = group[1:]
+
 
 def make_iterator_with_repeats(iterator, number_of_repeats):
     """Returns iterator where each item is repeated."""
@@ -28,6 +30,7 @@ def make_iterator_with_repeats(iterator, number_of_repeats):
         for _ in range(number_of_repeats):
             yield item
 
+
 def make_skip_and_repeat_iterator(iterator, number_of_skips, number_of_insertions):
     return make_iterator_with_repeats(make_skip_iterator(iterator, number_of_skips),
-                               number_of_insertions)
+                                      number_of_insertions)

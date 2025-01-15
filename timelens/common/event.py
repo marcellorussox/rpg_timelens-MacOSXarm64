@@ -3,7 +3,7 @@ import os
 import numpy as np
 from PIL import Image
 import tqdm
-from timelens.common import os_tools #, visualization_tools
+from timelens.common import os_tools  #, visualization_tools
 
 TIMESTAMP_COLUMN = 2
 X_COLUMN = 0
@@ -58,6 +58,7 @@ def load_events(file):
 
 class EventJITSequenceIterator(object):
     """JIT loading"""
+
     def __init__(self, filenames):
         self.filenames = filenames
 
@@ -75,6 +76,7 @@ class EventJITSequenceIterator(object):
 
 class EventJITSequence(object):
     """JIT File Sequential Reader"""
+
     def __init__(self, filenames, height, width):
         self._evseq = EventJITSequenceIterator(filenames)
         self._image_height = height
@@ -86,17 +88,17 @@ class EventJITSequence(object):
         for start_timestamp, end_timestamp in zip(timestamps[:-1], timestamps[1:]):
             events = []
             #search for first event
-            while not len(curbuf) or curbuf[-1,2] < start_timestamp:
+            while not len(curbuf) or curbuf[-1, 2] < start_timestamp:
                 curbuf = next(ev_seq_iter)
-            start_index = np.searchsorted(curbuf[:,2], start_timestamp, side='right')
+            start_index = np.searchsorted(curbuf[:, 2], start_timestamp, side='right')
             events.append(curbuf[start_index:])
             curbuf = next(ev_seq_iter)
             #search for last event
-            while not len(curbuf) or curbuf[-1,2] < end_timestamp:
+            while not len(curbuf) or curbuf[-1, 2] < end_timestamp:
                 events.append(curbuf)
                 curbuf = next(ev_seq_iter)
             #cut to last events
-            end_index = np.searchsorted(curbuf[:,2], end_timestamp, side='right')
+            end_index = np.searchsorted(curbuf[:, 2], end_timestamp, side='right')
             events.append(curbuf[:end_index])
             curbuf = curbuf[end_index:]
 
@@ -112,7 +114,7 @@ class EventJITSequence(object):
 
     @classmethod
     def from_folder(
-        cls, folder, image_height, image_width, event_file_template="{:06d}.npz"
+            cls, folder, image_height, image_width, event_file_template="{:06d}.npz"
     ):
         filename_iterator = os_tools.make_glob_filename_iterator(
             os.path.join(folder, event_file_template)
@@ -121,13 +123,11 @@ class EventJITSequence(object):
         return cls(filenames, image_height, image_width)
 
 
-
-
 class EventSequence(object):
     """Stores events in oldes-first order."""
 
     def __init__(
-        self, features, image_height, image_width, start_time=None, end_time=None
+            self, features, image_height, image_width, start_time=None, end_time=None
     ):
         """Returns object of EventSequence class.
 
@@ -160,10 +160,10 @@ class EventSequence(object):
 
     def is_self_consistent(self):
         return (
-            self.are_spatial_coordinates_within_range()
-            and self.are_timestamps_ascending()
-            and self.are_polarities_one_and_minus_one()
-            and self.are_timestamps_within_range()
+                self.are_spatial_coordinates_within_range()
+                and self.are_timestamps_ascending()
+                and self.are_polarities_one_and_minus_one()
+                and self.are_timestamps_within_range()
         )
 
     def are_spatial_coordinates_within_range(self):
@@ -187,12 +187,12 @@ class EventSequence(object):
 
     def flip_horizontally(self):
         self._features[:, X_COLUMN] = (
-            self._image_width - 1 - self._features[:, X_COLUMN]
+                self._image_width - 1 - self._features[:, X_COLUMN]
         )
 
     def flip_vertically(self):
         self._features[:, Y_COLUMN] = (
-            self._image_height - 1 - self._features[:, Y_COLUMN]
+                self._image_height - 1 - self._features[:, Y_COLUMN]
         )
 
     def reverse(self):
@@ -212,7 +212,7 @@ class EventSequence(object):
         if len(self) == 0:
             return
         self._features[:, TIMESTAMP_COLUMN] = (
-            self._end_time - self._features[:, TIMESTAMP_COLUMN]
+                self._end_time - self._features[:, TIMESTAMP_COLUMN]
         )
         self._features[:, POLARITY_COLUMN] = -self._features[:, POLARITY_COLUMN]
         self._start_time, self._end_time = 0, self._end_time - self._start_time
@@ -272,7 +272,7 @@ class EventSequence(object):
         """
         end_time = start_time + duration
         mask = (start_time <= self._features[:, TIMESTAMP_COLUMN]) & (
-            end_time > self._features[:, TIMESTAMP_COLUMN]
+                end_time > self._features[:, TIMESTAMP_COLUMN]
         )
 
         event_sequence = self.filter_by_mask(mask, make_deep_copy)
@@ -415,7 +415,7 @@ class EventSequence(object):
 
     @classmethod
     def from_folder(
-        cls, folder, image_height, image_width, event_file_template="{:06d}.npz"
+            cls, folder, image_height, image_width, event_file_template="{:06d}.npz"
     ):
         filename_iterator = os_tools.make_glob_filename_iterator(
             os.path.join(folder, event_file_template)
@@ -425,21 +425,20 @@ class EventSequence(object):
 
     @classmethod
     def from_npz_files(
-        cls,
-        list_of_filenames,
-        image_height,
-        image_width,
-        start_time=None,
-        end_time=None,
+            cls,
+            list_of_filenames,
+            image_height,
+            image_width,
+            start_time=None,
+            end_time=None,
     ):
         """Reads event sequence from numpy file list."""
         if len(list_of_filenames) > 1:
             features_list = []
             for f in tqdm.tqdm(list_of_filenames):
-                features_list += [load_events(f)]# for filename in list_of_filenames]
+                features_list += [load_events(f)]  # for filename in list_of_filenames]
             features = np.concatenate(features_list)
         else:
             features = load_events(list_of_filenames[0])
 
         return EventSequence(features, image_height, image_width, start_time, end_time)
-

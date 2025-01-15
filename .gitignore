@@ -6,3 +6,4 @@ example
 checkpoint.bin
 hsergb
 evaluation/results_folder/
+output.yaml

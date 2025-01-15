@@ -12,7 +12,7 @@ import matplotlib.colors as mcolors  # isort:skip
 import matplotlib.patches as mpatches  # isort:skip
 from matplotlib import pyplot as plt  # isort:skip
 
-    
+
 def _make_palette(colors):
     palette = []
     for color in colors:
@@ -84,7 +84,7 @@ def _add_scaled_colorbar(plot, aspect=20, pad_fraction=0.5, **kwargs):
 
 
 def make_blinking_images_video(
-    filename, image_list, time_per_image=0.2, number_of_loops=10
+        filename, image_list, time_per_image=0.2, number_of_loops=10
 ):
     """Creates video that flips between images in the list.
     
@@ -124,12 +124,12 @@ def save_image(filename, image):
 
 
 def save_matrix(
-    filename,
-    matrix,
-    minimum_value=None,
-    maximum_value=None,
-    colormap="magma",
-    is_colorbar=True,
+        filename,
+        matrix,
+        minimum_value=None,
+        maximum_value=None,
+        colormap="magma",
+        is_colorbar=True,
 ):
     """Saves the matrix to the image file.
     Args:
@@ -161,14 +161,14 @@ def save_matrix(
 
 
 def _plot_on_axis(
-    axis,
-    data,
-    legend_template,
-    y_axis_label,
-    color_of_axis_and_plot,
-    linestyle,
-    marker,
-    is_error=True,
+        axis,
+        data,
+        legend_template,
+        y_axis_label,
+        color_of_axis_and_plot,
+        linestyle,
+        marker,
+        is_error=True,
 ):
     opt_value, opt_index = np.max(data), np.argmax(data) + 1
     if is_error:
@@ -189,15 +189,15 @@ def _plot_on_axis(
 
 
 def plot_with_two_y_axis(
-    filename,
-    left_plot_data,
-    right_plot_data,
-    left_plot_legend_template="Training loss (smallest {0:.3f}, epoch {1:})",
-    right_plot_legend_template="Validation error (smallest {0:.3f}, epoch {1:})",
-    right_y_axis_label="Validation error, [%]",
-    left_y_axis_label="Training loss",
-    left_is_error=True,
-    right_is_error=True,
+        filename,
+        left_plot_data,
+        right_plot_data,
+        left_plot_legend_template="Training loss (smallest {0:.3f}, epoch {1:})",
+        right_plot_legend_template="Validation error (smallest {0:.3f}, epoch {1:})",
+        right_y_axis_label="Validation error, [%]",
+        left_y_axis_label="Training loss",
+        left_is_error=True,
+        right_is_error=True,
 ):
     """Plots two graphs on same figure.
     

@@ -1,17 +1,13 @@
-import os
-import sys
-
-import pkg_resources
-
 import torch as th
 import torch.nn.functional as F
-from timelens.common import size_adapter
 from torch import nn
 
+from timelens.common import size_adapter
 
-class up(nn.Module):
+
+class Up(nn.Module):
     def __init__(self, inChannels, outChannels):
-        super(up, self).__init__()
+        super(Up, self).__init__()
         self.conv1 = nn.Conv2d(inChannels, outChannels, 3, stride=1, padding=1)
         self.conv2 = nn.Conv2d(2 * outChannels, outChannels, 3, stride=1, padding=1)
 
@@ -22,9 +18,9 @@ class up(nn.Module):
         return x
 
 
-class down(nn.Module):
+class Down(nn.Module):
     def __init__(self, inChannels, outChannels, filterSize):
-        super(down, self).__init__()
+        super(Down, self).__init__()
         self.conv1 = nn.Conv2d(
             inChannels,
             outChannels,
@@ -63,16 +59,16 @@ class UNet(nn.Module):
         self._size_adapter = size_adapter.SizeAdapter(minimum_size=32)
         self.conv1 = nn.Conv2d(inChannels, 32, 7, stride=1, padding=3)
         self.conv2 = nn.Conv2d(32, 32, 7, stride=1, padding=3)
-        self.down1 = down(32, 64, 5)
-        self.down2 = down(64, 128, 3)
-        self.down3 = down(128, 256, 3)
-        self.down4 = down(256, 512, 3)
-        self.down5 = down(512, 512, 3)
-        self.up1 = up(512, 512)
-        self.up2 = up(512, 256)
-        self.up3 = up(256, 128)
-        self.up4 = up(128, 64)
-        self.up5 = up(64, 32)
+        self.down1 = Down(32, 64, 5)
+        self.down2 = Down(64, 128, 3)
+        self.down3 = Down(128, 256, 3)
+        self.down4 = Down(256, 512, 3)
+        self.down5 = Down(512, 512, 3)
+        self.up1 = Up(512, 512)
+        self.up2 = Up(512, 256)
+        self.up3 = Up(256, 128)
+        self.up4 = Up(128, 64)
+        self.up5 = Up(64, 32)
         self.conv3 = nn.Conv2d(32, outChannels, 3, stride=1, padding=1)
 
     def forward(self, x):
@@ -92,7 +88,7 @@ class UNet(nn.Module):
         x = self.up5(x, s1)
 
         # Note that original code has relu et the end.
-        if self._ends_with_relu == True:
+        if self._ends_with_relu:
             x = F.leaky_relu(self.conv3(x), negative_slope=0.1)
         else:
             x = self.conv3(x)

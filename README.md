@@ -40,9 +40,9 @@ Per installare Miniforge in modo semplice e gestibile, si consiglia di utilizzar
     brew install --cask miniforge
 
 #### **Configurare Miniforge per la shell Zsh**
-Dopo l'installazione, è necessario configurare Miniforge per funzionare correttamente con la shell Zsh. Esegui il seguente comando per inizializzare Conda:
+Dopo l'installazione, è necessario configurare Miniforge per funzionare correttamente con la shell Zsh. Esegui il seguente comando per inizializzare Conda e riavvia il terminale:
     
-    conda init zsh
+    conda init
 
 Se il comando sopra non risolve il problema, aggiungi manualmente il seguente blocco di configurazione al tuo file `.zshrc`:
 

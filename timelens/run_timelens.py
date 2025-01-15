@@ -60,7 +60,7 @@ def _interpolate(
 
             with torch.no_grad():
                 frame, _ = network.run_fast(example)
-    
+
             interpolated = th.clamp(
                 frame.squeeze().cpu().detach(), 0, 1,
             )

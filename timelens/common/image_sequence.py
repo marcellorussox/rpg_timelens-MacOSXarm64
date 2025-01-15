@@ -13,6 +13,7 @@ import tqdm
 
 class ImageJITReader(object):
     """Reads Image Just-in-Time"""
+
     def __init__(self, filenames):
         self.filenames = filenames
 
@@ -23,7 +24,6 @@ class ImageJITReader(object):
         f = self.filenames[index]
         img = Image.open(f).convert("RGB")
         return img
-
 
 
 class ImageSequence(object):
@@ -54,7 +54,7 @@ class ImageSequence(object):
             filename = os.path.join(folder, "{:06d}.png".format(image_index))
             image.save(filename)
         os_tools.list_to_file(
-        os.path.join(folder, "timestamp.txt"), [str(timestamp) for timestamp in self._timestamps])
+            os.path.join(folder, "timestamp.txt"), [str(timestamp) for timestamp in self._timestamps])
 
     def to_video(self, filename):
         """Saves to video."""
@@ -72,7 +72,7 @@ class ImageSequence(object):
 
     @classmethod
     def from_folder(
-        cls, folder, image_file_template="frame_{:010d}.png", timestamps_file="timestamp.txt"
+            cls, folder, image_file_template="frame_{:010d}.png", timestamps_file="timestamp.txt"
     ):
         filename_iterator = os_tools.make_glob_filename_iterator(
             os.path.join(folder, image_file_template)

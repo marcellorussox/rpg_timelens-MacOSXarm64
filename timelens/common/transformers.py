@@ -11,7 +11,6 @@ from torchvision import transforms
 import torch
 
 
-
 def initialize_transformers(number_of_bins_in_voxel_grid=5):
     return [
         images_to_image_tensors,
@@ -20,6 +19,7 @@ def initialize_transformers(number_of_bins_in_voxel_grid=5):
             example, number_of_bins_in_voxel_grid
         )
     ]
+
 
 def event_packets_to_voxel_grids(example, number_of_bins_in_voxel_grid):
     for packet_name in ["before", "after"]:
@@ -38,7 +38,7 @@ def apply_transforms(example, transforms):
             example = transform(example)
     return example
 
-    
+
 def apply_random_flips(example):
     """Returns example with randomly fliped events and image.
     
@@ -73,7 +73,7 @@ def collate(examples_list):
             continue
         for field_name in examples_list[0][packet_name]:
             if ("tensor" in field_name or "voxel_grid" in field_name) and (
-                "std" not in field_name and "mean" not in field_name
+                    "std" not in field_name and "mean" not in field_name
             ):
                 batch[packet_name][field_name] = th.stack(
                     [example[packet_name][field_name] for example in examples_list]
@@ -116,4 +116,3 @@ def reverse_event_stream_in_before_packet(example):
     event_stream.reverse()
     example["before"]["reversed_events"] = event_stream
     return example
-

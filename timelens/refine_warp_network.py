@@ -3,6 +3,7 @@ from timelens.common import warp
 from timelens import fusion_network, warp_network
 from timelens.superslomo import unet
 
+
 def _pack_for_residual_flow_computation(example):
     tensors = [
         example["middle"]["{}_warped".format(packet)] for packet in ["after", "before"]
@@ -47,7 +48,7 @@ class RefineWarp(warp_network.Warp, fusion_network.Fusion):
             y_displacement=residual[:, 0, ...],
             x_displacement=residual[:, 1, ...],
         )
-        
+
         (after_refined, before_refined) = th.chunk(refined, 2)
         (after_refined_invalid, before_refined_invalid) = th.chunk(
             refined_invalid.detach(), 2)
@@ -59,7 +60,6 @@ class RefineWarp(warp_network.Warp, fusion_network.Fusion):
             before_residual,
             after_residual,
         )
-
 
     def run_fast(self, example):
         warp_network.Warp.run_and_pack_to_example(self, example)

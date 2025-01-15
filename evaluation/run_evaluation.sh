@@ -1,0 +1,1 @@
+python evaluation/quantitative_evaluation.py evaluation/results_folder --num_processes 4 --output_file output.yaml --num_skips 0

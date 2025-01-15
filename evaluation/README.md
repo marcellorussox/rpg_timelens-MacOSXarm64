@@ -37,9 +37,7 @@ Il toolbox richiede che i risultati siano organizzati nella seguente struttura d
 
 La valutazione può essere eseguita utilizzando il seguente comando:
 
-    python quantitative_evaluation.py path/to/results_folder --num_processes 4
-                                                             --output_file output.yaml
-                                                             --num_skips 3
+    ./run_evaluation.sh
 
 - Il parametro `--num_processes` definisce il numero di processi utilizzati (il codice supporta l'elaborazione parallela per ridurre i tempi di calcolo).
 - Il percorso per il file di output viene specificato con `--output_file`.

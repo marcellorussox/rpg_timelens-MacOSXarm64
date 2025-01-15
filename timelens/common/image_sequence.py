@@ -72,7 +72,7 @@ class ImageSequence(object):
 
     @classmethod
     def from_folder(
-        cls, folder, image_file_template="frame_{:010d}.png", timestamps_file="timestamps.txt"
+        cls, folder, image_file_template="frame_{:010d}.png", timestamps_file="timestamp.txt"
     ):
         filename_iterator = os_tools.make_glob_filename_iterator(
             os.path.join(folder, image_file_template)

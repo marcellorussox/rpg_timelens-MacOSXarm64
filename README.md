@@ -92,7 +92,7 @@ Creare un ambiente Conda e installare le dipendenze richieste:
 
     conda create -y -n timelens python=3.9
     conda activate timelens
-    pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+    conda install pytorch torchvision torchaudio -c pytorch
     conda install -y -c conda-forge opencv scipy tqdm click
     brew install ffmpeg
 
@@ -109,6 +109,7 @@ Clonare il codice del progetto:
 
 Scaricare i dati di esempio e il checkpoint per l’interpolazione:
 
+    brew install wget
     wget http://download.ifi.uzh.ch/rpg/web/data/timelens/data2/checkpoint.bin
     wget http://download.ifi.uzh.ch/rpg/web/data/timelens/data2/example_github.zip
     unzip example_github.zip

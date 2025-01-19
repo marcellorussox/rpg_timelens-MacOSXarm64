@@ -12,12 +12,6 @@ Per maggiori informazioni, visita la [pagina del progetto](http://rpg.ifi.uzh.ch
 
 ---
 
-## Google Colab
-
-Un notebook Google Colab è disponibile [qui](TimeLens.ipynb). È possibile aumentare la frequenza dei frame dei propri video utilizzando i dati salvati su Google Drive.
-
----
-
 ## Gallery
 
 Per ulteriori esempi, visita la [pagina del progetto](http://rpg.ifi.uzh.ch/timelens).
@@ -86,17 +80,7 @@ Se tutto è configurato correttamente, dovresti vedere una versione di Conda, ad
     
     conda 23.x.x
 
-### 2. Creazione dell'ambiente Conda
-
-Creare un ambiente Conda e installare le dipendenze richieste:
-
-    conda create -y -n timelens python=3.9
-    conda activate timelens
-    conda install pytorch torchvision torchaudio -c pytorch
-    conda install -y -c conda-forge opencv scipy tqdm click
-    brew install ffmpeg
-
-### 3. Clonare il repository
+### 2. Clonare il repository
 
 Clonare il codice del progetto:
 
@@ -104,6 +88,14 @@ Clonare il codice del progetto:
     cd ~/timelens
     git clone https://github.com/marcellorussox/rpg_timelens-MacOSXarm64.git rpg_timelens
     cd rpg_timelens
+
+### 3. Creazione dell'ambiente Conda
+
+Creare un ambiente Conda e installare le dipendenze richieste:
+
+    conda create --name timelens --file environment.txt
+    conda activate timelens
+    brew install ffmpeg
 
 ### 4. Scaricare i dati di esempio e il modello pre-addestrato
 

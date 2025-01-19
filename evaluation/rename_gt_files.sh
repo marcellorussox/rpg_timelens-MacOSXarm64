@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# Percorso relativo della cartella results_folder
-results_folder="evaluation/results_folder"
+# Percorso relativo della cartella ev_test
+test="test_folder/ev_test2"
 
 # Trova tutte le sottocartelle delle sottocartelle e rinomina i file PNG
-find "$results_folder" -mindepth 2 -type d | while read -r folder; do
+find "$test" -mindepth 2 -type d | while read -r folder; do
     echo "Processing folder: $folder"
 
     # Contatore per i nuovi nomi

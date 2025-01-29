@@ -58,7 +58,7 @@ class ImageSequence(object):
 
     def to_video(self, filename):
         """Saves to video."""
-        fourcc = cv2.VideoWriter_fourcc(*"XVID")
+        fourcc = cv2.VideoWriter_fourcc(*"mp4v")
         video = cv2.VideoWriter(filename, fourcc, 30.0, (self._width, self._height))
         for image in self._images:
             video.write(cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR))

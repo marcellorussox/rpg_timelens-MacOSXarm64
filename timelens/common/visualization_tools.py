@@ -96,7 +96,7 @@ def make_blinking_images_video(
     height, width = image_list[0].shape
     video_fps = 30
     number_of_frames_per_image = round(video_fps * time_per_image)
-    fourcc = cv2.VideoWriter_fourcc(*"XVID")
+    fourcc = cv2.VideoWriter_fourcc(*"mp4v")
     video = cv2.VideoWriter(filename, fourcc, video_fps, (width, height))
     for _ in range(number_of_loops):
         for image in image_list:

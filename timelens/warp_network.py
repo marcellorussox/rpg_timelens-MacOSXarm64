@@ -2,6 +2,7 @@ import torch as th
 from timelens.superslomo import unet
 from torch import nn
 from timelens.common import warp
+from timelens.config import DEVICE
 
 
 def _pack_voxel_grid_for_flow_estimation(example):
@@ -33,7 +34,7 @@ class Warp(nn.Module):
         self.flow_network = unet.UNet(5, 2, False)
 
     def from_legacy_checkpoint(self, checkpoint_filename):
-        checkpoint = th.load(checkpoint_filename, map_location=th.device('cpu'))
+        checkpoint = th.load(checkpoint_filename, map_location=DEVICE)
         self.load_state_dict(checkpoint["networks"])
 
     def run_warp(self, example):

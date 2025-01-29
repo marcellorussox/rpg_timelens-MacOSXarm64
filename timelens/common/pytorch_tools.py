@@ -73,9 +73,12 @@ def dilate(image, window_size):
                      dilation.
     """
     dilation_window = np.ones((window_size, window_size), dtype=bool)
+
+    # Sposta l'immagine su CPU prima di convertirla in NumPy (necessario per NumPy)
+    image_cpu = image.cpu() if image.is_mps else image
+
     dilated_image = th.from_numpy(
-        morphology.binary_dilation(image.cpu().numpy(), dilation_window).astype(
-            np.uint8
-        )
-    )
+        morphology.binary_dilation(image_cpu.numpy(), dilation_window).astype(np.uint8)
+    ).to(image.device)  # Restituisci il risultato sulla stessa device dell'input
+
     return dilated_image

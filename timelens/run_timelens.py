@@ -1,9 +1,10 @@
 import os
+import sys
+from os.path import dirname, join
+from timelens.config import DEVICE
 
 import click
 import numpy as np
-import sys
-from os.path import dirname, join
 import torch
 
 sys.path.append(dirname(dirname(__file__)))
@@ -13,7 +14,6 @@ from timelens.common import (
     hybrid_storage,
     image_sequence,
     os_tools,
-    pytorch_tools,
     transformers
 )
 from torchvision import transforms
@@ -62,7 +62,7 @@ def _interpolate(
                 frame, _ = network.run_fast(example)
 
             interpolated = th.clamp(
-                frame.squeeze().cpu().detach(), 0, 1,
+                frame.squeeze().to(DEVICE).detach(), 0, 1,
             )
             output_frames.append(transforms.ToPILImage()(interpolated))
             output_frames[-1].save(join(output_folder, "{:06d}.png".format(counter)))
@@ -78,8 +78,7 @@ def _interpolate(
 def _load_network(checkpoint_file):
     network = attention_average_network.AttentionAverage()
     network.from_legacy_checkpoint(checkpoint_file)
-    device = torch.device("cpu")
-    network.to(device)
+    network.to(DEVICE)
     network.eval()
     return network
 

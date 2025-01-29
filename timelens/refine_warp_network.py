@@ -9,6 +9,11 @@ def _pack_for_residual_flow_computation(example):
         example["middle"]["{}_warped".format(packet)] for packet in ["after", "before"]
     ]
     tensors.append(example["middle"]["fusion"])
+
+    # Assicura che tutti i tensori siano sullo stesso device
+    device = tensors[0].device  # Prendi la device del primo tensore
+    tensors = [t.to(device) for t in tensors]  # Sposta tutti i tensori sulla stessa device
+
     return th.cat(tensors, dim=1)
 
 

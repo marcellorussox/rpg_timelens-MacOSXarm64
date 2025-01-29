@@ -1,6 +1,7 @@
 import torch as th
 
 from timelens.common import event
+from ..config import DEVICE
 
 
 def _split_coordinate(c):
@@ -32,7 +33,7 @@ def to_voxel_grid(event_sequence, nb_of_time_bins=5, remapping_maps=None):
                           event_sequence._image_height,
                           event_sequence._image_width,
                           dtype=th.float32,
-                          device='cpu')
+                          device=DEVICE)
 
     voxel_grid_flat = voxel_grid.flatten()
 
@@ -66,6 +67,11 @@ def to_voxel_grid(event_sequence, nb_of_time_bins=5, remapping_maps=None):
                           + lim_t.long() * event_sequence._image_width * event_sequence._image_height
 
                 weight = polarity * (1 - (lim_x - x).abs()) * (1 - (lim_y - y).abs()) * (1 - (lim_t - t).abs())
+
+                voxel_grid_flat = voxel_grid_flat.to(dtype=th.float32, non_blocking=True)
+                lin_idx = lin_idx.to(dtype=th.int64, device=DEVICE, non_blocking=True)
+                weight = th.tensor(weight, dtype=th.float32, device=DEVICE)
+
                 voxel_grid_flat.index_add_(dim=0, index=lin_idx[mask], source=weight[mask].float())
 
     return voxel_grid

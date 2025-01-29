@@ -1,13 +1,16 @@
 import torch as th
 from timelens.superslomo import unet
 from torch import nn
+from timelens.config import DEVICE
 
 
 def _pack(example):
-    return th.cat([example['before']['voxel_grid'],
-                   example['before']['rgb_image_tensor'],
-                   example['after']['voxel_grid'],
-                   example['after']['rgb_image_tensor']], dim=1)
+    device = example['before']['voxel_grid'].device
+
+    return th.cat([example['before']['voxel_grid'].to(device),
+                   example['before']['rgb_image_tensor'].to(device),
+                   example['after']['voxel_grid'].to(device),
+                   example['after']['rgb_image_tensor'].to(device)], dim=1)
 
 
 class Fusion(nn.Module):
@@ -19,7 +22,7 @@ class Fusion(nn.Module):
         return self.fusion_network(_pack(example))
 
     def from_legacy_checkpoint(self, checkpoint_filename):
-        checkpoint = th.load(checkpoint_filename, map_location=th.device('cpu'))
+        checkpoint = th.load(checkpoint_filename, map_location=DEVICE)
         self.load_state_dict(checkpoint["networks"])
 
     def run_and_pack_to_example(self, example):

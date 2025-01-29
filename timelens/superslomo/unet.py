@@ -12,6 +12,7 @@ class Up(nn.Module):
         self.conv2 = nn.Conv2d(2 * outChannels, outChannels, 3, stride=1, padding=1)
 
     def forward(self, x, skpCn):
+        x = x.to(self.conv1.weight.device)  # Assicura che l'input sia sullo stesso device dei pesi
         x = F.interpolate(x, scale_factor=2, mode="bilinear")
         x = F.leaky_relu(self.conv1(x), negative_slope=0.1)
         x = F.leaky_relu(self.conv2(th.cat((x, skpCn), 1)), negative_slope=0.1)
@@ -72,6 +73,10 @@ class UNet(nn.Module):
         self.conv3 = nn.Conv2d(32, outChannels, 3, stride=1, padding=1)
 
     def forward(self, x):
+        # 🔹 Assicura che l'input sia sulla stessa device dei pesi
+        device = next(self.parameters()).device
+        x = x.to(device)
+
         # Size adapter spatially augments input to the size divisible by 32.
         x = self._size_adapter.pad(x)
         x = F.leaky_relu(self.conv1(x), negative_slope=0.1)
@@ -87,11 +92,12 @@ class UNet(nn.Module):
         x = self.up4(x, s2)
         x = self.up5(x, s1)
 
-        # Note that original code has relu et the end.
+        # Note that original code has relu at the end.
         if self._ends_with_relu:
             x = F.leaky_relu(self.conv3(x), negative_slope=0.1)
         else:
             x = self.conv3(x)
+
         # Size adapter crops the output to the original size.
         x = self._size_adapter.unpad(x)
         return x

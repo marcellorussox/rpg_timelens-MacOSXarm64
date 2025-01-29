@@ -7,23 +7,33 @@ from timelens.superslomo import unet
 def _pack_input_for_attention_computation(example):
     fusion = example["middle"]["fusion"]
     number_of_examples, _, height, width = fusion.size()
-    return th.cat(
-        [
-            example["after"]["flow"],
-            example["middle"]["after_refined_warped"],
-            example["before"]["flow"],
-            example["middle"]["before_refined_warped"],
-            example["middle"]["fusion"],
-            th.Tensor(example["middle"]["weight"])
-            .view(-1, 1, 1, 1)
-            .expand(number_of_examples, 1, height, width)
-            .type(fusion.type()),
-        ],
-        dim=1,
-    )
+
+    # Controlla se `weight` è una lista e convertila in un tensore
+    if isinstance(example["middle"]["weight"], list):
+        weight = th.tensor(example["middle"]["weight"], dtype=th.float32, device=fusion.device)
+    else:
+        weight = example["middle"]["weight"].to(dtype=th.float32, device=fusion.device)
+
+    # Prendi il device del primo tensore (fusion) e sposta tutto su di esso
+    device = fusion.device
+    tensors = [
+        example["after"]["flow"].to(device),
+        example["middle"]["after_refined_warped"].to(device),
+        example["before"]["flow"].to(device),
+        example["middle"]["before_refined_warped"].to(device),
+        example["middle"]["fusion"].to(device),
+        weight.view(-1, 1, 1, 1).expand(number_of_examples, 1, height, width).type(fusion.dtype),
+    ]
+
+    return th.cat(tensors, dim=1)
 
 
 def _compute_weighted_average(attention, before_refined, after_refined, fusion):
+    # Assicura che tutti i tensori siano sullo stesso device
+    device = attention.device
+    before_refined = before_refined.to(device)
+    after_refined = after_refined.to(device)
+
     return (
             attention[:, 0, ...].unsqueeze(1) * before_refined
             + attention[:, 1, ...].unsqueeze(1) * after_refined

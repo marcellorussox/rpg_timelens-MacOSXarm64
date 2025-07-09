@@ -173,7 +173,7 @@ Le immagini sono contenute nella directory `images_corrected`. I timestamp corri
 ## Modifiche rispetto al progetto originale
 
 1. **Rimosso il supporto CUDA**:
-   - Il codice è stato modificato per funzionare esclusivamente su CPU, eliminando i riferimenti a CUDA.
+   - Il codice è stato modificato per funzionare senza supporto a CUDA, prima con .
 2. **Compatibilità con macOS ARM**:
    - Configurazione ottimizzata per macOS ARM (Apple Silicon) utilizzando Miniforge.
 3. **Installazione semplificata**:
